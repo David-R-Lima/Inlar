@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model donation {
+  CRE_AT     DateTime @default(now())
+  DESC       String?
+  ID_DOA     Int      @id @default(autoincrement())
+  QUAN       Int?
+  UPD_AT     DateTime @default(now())
+  ID_DONATOR Int
+  donator    Donator  @relation(fields: [ID_DONATOR], references: [ID_DONATOR], map: "Donation_ID_DONATOR_fkey", onDelete: Cascade)
+
+  @@index([ID_DONATOR], map: "Donation_ID_DONATOR_fkey")
+}
+
+model Donator {
+  ID_DONATOR Int        @id @default(autoincrement())
+  NAME       String?
+  EMAIL      String?
+  CPF        String?
+  CELLPHONE  String?
+  ADDRESS   String?
+  CRE_AT     DateTime @default(now())
+  UPD_AT     DateTime? @default(now())
+  ID_DOA     Int?
+  donation   donation[]
+}
+
+model user {
+  id_user   Int      @id @default(autoincrement())
+  name      String?
+  address   String?
+  password  String?
+  cellPhone String?
+  cpf       String?
+  email     String?   @unique(map: "User_email_key")
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @default(now())
+}
